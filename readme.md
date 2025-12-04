@@ -1,4 +1,4 @@
-Desafío Data Engineer – Arquitectura Medallion con PySpark + Docker
+<img width="921" height="391" alt="image" src="https://github.com/user-attachments/assets/75f56653-3111-4963-94ae-9035b4a9bfda" />Desafío Data Engineer – Arquitectura Medallion con PySpark + Docker
 
 1. Descripción del Problema y Contexto de Negocio
 
@@ -16,8 +16,10 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
     Preparación final para modelos analíticos
 
 2. Arquitectura Medallion Implementada
+   
+<img width="921" height="391" alt="image" src="https://github.com/user-attachments/assets/6aa69c82-7dca-4f63-9550-cc175a3f6d50" />
 
-    La solución se compone de tres capas:
+   La solución se compone de tres capas:
 
         Bronze – Ingesta cruda
 
@@ -49,7 +51,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
             Genera tabla final dim_features
 
-3. Estructura del Repositorio
+4. Estructura del Repositorio
 
         desafio_carozzi_docker/
         │
@@ -173,3 +175,4 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Parquet
+
