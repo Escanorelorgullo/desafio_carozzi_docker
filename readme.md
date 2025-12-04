@@ -161,6 +161,197 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         | `mix_credito_vs_contado_3m`    | double  | Porcentaje de ventas en crédito (`tipo_pago = 'credito'`) sobre el total de ventas del cliente en los últimos 3 meses. |
 
 
+8. Resumen completo de lo realizado
+
+Desde la instalación de Docker hasta la construcción final de la capa Gold
+
+    1. Entorno y Setup Inicial
+        Instalación y configuración con Docker
+        Para evitar problemas de dependencias locales (Java, Python, PySpark, PATH, venv), decidi correr todo el proyecto dentro de un contenedor Docker.
+
+Se crearon los siguientes ejecutables:
+
+    1. Dockerfile
+    Imagen base: python:3.11-slim
+
+    Se instaló:
+
+    openjdk-21 (necesario para PySpark)
+
+    dependencias de Spark/arrow
+
+    pip + pyspark + librerías del proyecto
+
+    se definió /app como directorio de trabajo
+
+    2. docker-compose.yml
+    Un servicio llamado etl que:
+    monta el proyecto local en /app
+    ejecuta el pipeline con:
+    command: ["python", "-m", "src.main"]
+
+
+    permite correr scripts manuales con:
+
+    docker compose run --rm etl python -m src.check_data
+
+
+    Esto permitió ejecutar Spark sin instalar nada en el entorno local.
+
+Flujo Completo del Pipeline
+
+    Orquestado desde:
+
+    python -m src.main
+
+Capa Bronze – Ingesta cruda
+
+    Objetivo: mover datos de RAW --> BRONZE sin alterar su contenido.
+
+    Procesos realizados:
+    Tarea	Estado
+    Lectura masiva de CSV	
+    Escritura en parquet particionado/compactado	
+    Sin filtros ni transformaciones	
+    Agregamos dos columnas: ingestion_timestamp, source_file
+    
+Tablas generadas en Bronze:
+
+    customers
+    
+    products
+    
+    orders_header
+    
+    orders_detail
+
+Capa Silver – Limpieza y Modelado
+
+    Objetivo: datos limpios, consistentes y listos para modelar.
+
+    Transformaciones realizadas:
+    1. Eliminar duplicados
+    
+    customers → por customer_id
+    
+    products → por product_id
+    
+    orders_header → por order_id
+    
+    orders_detail → por (order_id + line_id)
+
+    2. Tipos de datos correctos
+    
+    Fechas convertidas a timestamp/date
+    
+    Montos a double
+    
+    Flags a boolean
+
+    3. Filtrado de basura
+    
+    Se excluyen:
+    
+    líneas con qty_units ≤ 0
+    
+    líneas con order_net_amount ≤ 0
+
+    4. Construcción del modelo dimensional
+    
+    Se generó:
+    
+    Dimensiones:
+    
+        dim_customer
+        
+        dim_product
+    
+    Tabla de hechos:
+    
+        fact_order_line = left join orders_header + orders_detail
+    
+        Incluye:
+        
+        customer_id
+        
+        product_id
+        
+        order_date
+        
+        cantidades
+        
+        montos
+        
+        promo_flag
+        
+        tipo_pago
+        
+        category, subcategory, brand
+    
+    5. Persistencia
+    
+        Las 3 tablas se guardan en /data/silver/.
+
+Capa Gold – Agregados para analítica
+
+    Objetivo: tabla agregada para analítica avanzada
+
+    1. Ventana de 3 meses
+    
+    Se detecta la:
+    
+    max_order_date
+    three_months_ago = max_order_date - 90 días
+    
+    Y se filtran solo los pedidos en ese rango --> fact_3m.
+    
+    2. Agregado por cliente
+    
+    Se crea:
+    
+    gold_sales_customer_3m
+    
+    Con:
+    
+    total_order_net_amount_3m
+    
+    total_line_net_amount_3m
+    
+    total_qty_units_3m
+    
+    last_order_date
+    
+    canal
+    
+    product_category
+
+Construcción final: dim_features
+
+    Esta es la tabla que pide explícitamente el desafío.
+    
+    A partir de fact_3m y gold_sales_customer_3m se generan 8 features:
+    
+    ventas_total_3m
+    
+    recencia_dias
+    
+    frecuencia_pedidos_3m
+    
+    ticket_promedio_3m
+    
+    dias_promedio_entre_pedidos
+    
+    variedad_categorias_3m
+    
+    porcentaje_pedidos_promo_3m
+    
+    mix_credito_vs_contado_3m
+    
+    La tabla resultante:
+    
+    data/gold/dim_features/
+
+
 8. Migración a Arquitectura en Microsoft Fabric
 
 <img width="921" height="377" alt="image" src="https://github.com/user-attachments/assets/032c1eee-0d05-41b8-97a2-13481d5ce702" />
@@ -204,6 +395,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Delta
+
 
 
 
