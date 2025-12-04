@@ -19,6 +19,9 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
    
 <img width="921" height="391" alt="image" src="https://github.com/user-attachments/assets/6aa69c82-7dca-4f63-9550-cc175a3f6d50" />
 
+<img width="921" height="443" alt="image" src="https://github.com/user-attachments/assets/3f102960-6879-422f-b525-0e04a52358b6" />
+
+
    La solución se compone de tres capas:
 
         Bronze – Ingesta cruda
@@ -175,5 +178,6 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Parquet
+
 
 
