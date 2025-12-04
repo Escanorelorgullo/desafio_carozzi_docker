@@ -49,9 +49,10 @@ def main():
         try:
             spark.stop()
         except Exception as e:
-            print(f"⚠️ No se pudo detener Spark limpiamente: {e}")
+            print(f"No se pudo detener Spark limpiamente: {e}")
 
 
 if __name__ == "__main__":
     main()
+
 
