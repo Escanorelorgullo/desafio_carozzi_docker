@@ -169,4 +169,5 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
         /data/gold/dim_features/
 
+
         En Formato Parquet
