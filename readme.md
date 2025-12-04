@@ -178,7 +178,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
             Consumo por BI, modelos predictivos o Power BI.
     
         E. Purview
-            Lineage automático entre notebooks y Lakehouse.
+            Lineage entre lakehouse, pipelines, reporteria.
 
 8. Tabla Final Entregada
 
@@ -186,7 +186,8 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
         /data/gold/dim_features/
 
-        En Formato Parquet
+        En Formato Delta
+
 
 
 
