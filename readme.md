@@ -87,9 +87,17 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         git clone https://github.com/Escanorelorgullo/desafio_carozzi_docker.git
         cd desafio_carozzi_docker
 
-        Segundo Construir y ejecutar el pipeline completo:
+        Segundo Construir y ejecutar el pipeline completo
    
         docker compose up --build
+
+        Si los pasos anteriores "NO FUNCIONAN" hacer lo siguiente:
+
+        1.- descargar todos los archivos a tu pc local en una carpeta
+        2.- abrir del archivo data_drive y descargar lo que esta en ese link (que es la carpeta data) en la carpeta creada
+        3.- abrir CMD y posicionarse en la carpeta donde estan los archivos ejemplo: C:\Users\RonaldAguilera\Desktop\desafio_carozzi_docker
+        4.- luego de tener instalado docker desktop ejecutar el comando: docker compose up --build el cual ejecutara todo lo necesario
+        5.- Para ver las tablas creadas y algunas metricas ejecutar el sigueinte comando: docker compose run --rm etl python -m src.check_data
 
 
     El contenedor ejecutará automáticamente:
@@ -108,7 +116,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
         docker compose run --rm etl python -m src.check_data
 
-5. Resumen de Cada Capa
+6. Resumen de Cada Capa
 
   
 
@@ -196,6 +204,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Delta
+
 
 
 
