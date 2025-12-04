@@ -139,12 +139,19 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
 7. Diccionario de Datos – Tabla dim_features
 
-        Columna	Tipo	                                   Descripción
-        ----------------------------------------------------------------------------------------------------------
-        customer_id	int	                        Identificador único del cliente
-        monto_total_3m	double	                Suma del monto neto de órdenes del cliente en los últimos 3 meses
-        monto_linea_total_3m  double	        Suma del monto de líneas (line_net_amount) en últimos 3 meses
-        unidades_totales_3m	int	                Total de unidades compradas por el cliente en últimos 3 meses
+
+        | Columna                        | Tipo    | Descripción                                                                                                  |
+        |--------------------------------|---------|--------------------------------------------------------------------------------------------------------------|
+        | `customer_id`                  | int     | Identificador único del cliente.                                                                            |
+        | `ventas_total_3m`              | double  | Suma del monto neto de ventas del cliente en los últimos 3 meses (consistente con `order_net_amount`).      |
+        | `recencia_dias`                | int     | Número de días entre la fecha de referencia (última fecha de datos disponible) y la fecha del último pedido del cliente. |
+        | `frecuencia_pedidos_3m`        | int     | Cantidad de pedidos realizados por el cliente en los últimos 3 meses.                                       |
+        | `ticket_promedio_3m`           | double  | Promedio de venta por pedido en los últimos 3 meses: `ventas_total_3m / frecuencia_pedidos_3m` (solo clientes con ≥1 pedido). |
+        | `dias_promedio_entre_pedidos`  | double  | Promedio de días entre pedidos consecutivos del cliente dentro de los últimos 3 meses (si tiene ≥2 pedidos).|
+        | `variedad_categorias_3m`       | int     | Número de categorías distintas (`product_category`) compradas por el cliente en los últimos 3 meses.        |
+        | `porcentaje_pedidos_promo_3m`  | double  | Porcentaje de pedidos del cliente que tuvieron al menos una línea con `promo_flag = 1` en los últimos 3 meses. |
+        | `mix_credito_vs_contado_3m`    | double  | Porcentaje de ventas en crédito (`tipo_pago = 'credito'`) sobre el total de ventas del cliente en los últimos 3 meses. |
+
 
 8. Migración a Arquitectura en Microsoft Fabric
 
@@ -189,6 +196,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Delta
+
 
 
 
