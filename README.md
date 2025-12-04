@@ -1,2 +1,175 @@
 # desafio_carozzi_docker
 Proyecto desafio carozzi
+
+Desafío Data Engineer – Arquitectura Medallion con PySpark + Docker
+
+1. Descripción del Problema y Contexto de Negocio
+
+Una empresa del rubro retail necesita construir un pipeline de ingeniería de datos capaz de procesar información histórica de ventas, productos y clientes. 
+El objetivo es transformar los datos desde su formato crudo (raw) hacia una estructura optimizada que permita análisis posteriores mediante features agregadas por cliente.
+
+Para lograrlo, se requiere implementar una arquitectura de procesamiento por capas (Medallion Architecture) utilizando PySpark, ejecutándose en un ambiente local aislado en este caso se utilizo docker, para que soporte datasets grandes y permita:
+
+    Trazabilidad entre capas
+
+    Limpieza y estandarización
+
+    Cálculo de indicadores de negocio
+
+    Preparación final para modelos analíticos
+
+2. Arquitectura Medallion Implementada
+
+    La solución se compone de tres capas:
+
+        Bronze – Ingesta cruda
+
+            Lee archivos CSV desde /data/raw/
+
+            Estandariza nombres de columnas
+
+            Agrega metadata (ingestion_timestamp, source_file)
+
+            Guarda en formato Parquet en /data/bronze/
+
+        Silver – Limpieza y Enriquecimiento
+
+            Elimina duplicados
+
+            Aplica validaciones de calidad
+
+            Estandariza tipos de datos
+
+            Une órdenes header/detalle para generar fact_order_line
+
+        Gold – Features y Agregaciones
+
+            Filtra los últimos 90 días de datos
+
+            Agrega ventas por cliente (monto, unidades, líneas)
+
+            Genera gold_sales_customer_3m
+
+            Genera tabla final dim_features
+
+3. Estructura del Repositorio
+        desafio_carozzi_docker/
+        │
+        ├── docker-compose.yml
+        ├── Dockerfile
+        ├── requirements.txt
+        │
+        ├── data/
+        │   ├── raw/
+        │   ├── bronze/
+        │   ├── silver/
+        │   └── gold/
+        │
+        └── src/
+            ├── config.py
+            ├── main.py
+            ├── bronze.py
+            ├── silver.py
+            ├── gold.py
+            └── check_data.py
+
+4. Instalación y Ejecución
+    Requisitos Previos:
+
+        Docker Desktop instalado
+
+        Git instalado
+
+    Primero Clonar el repositorio
+        git clone https://github.com/<tu_usuario>/<repo>.git
+        cd desafio_carozzi_docker
+
+    Segundo Construir y ejecutar el pipeline completo:
+        docker compose up --build
+
+
+    El contenedor ejecutará automáticamente:
+
+        Ingesta Bronze
+
+        Transformaciones Silver
+
+        Cálculos Gold
+
+        Generación de dim_features
+
+    Tercero para validar resultados
+
+        Ejecutar el script de validaciones con el siguiente comando:
+
+            docker compose run --rm etl python -m src.check_data
+
+5. Resumen de Cada Capa
+
+    Bronze
+        Archivo	             Origen	           Descripción
+        ----------------------------------------------------
+        customers	       CSV crudo	    Datos de clientes
+        products	       CSV crudo	    Datos de productos
+        orders_header	   CSV crudo	    Encabezado de pedidos
+        orders_detail	   CSV crudo	    Líneas de productos vendidos
+
+    Silver
+        Tabla	                               Descripción
+        ----------------------------------------------------
+        dim_customer	                    Dimensión limpia de clientes
+        dim_product	                        Dimensión limpia de productos
+        fact_order_line	                    Hechos de órdenes con join limpio y columnas no duplicadas
+
+    Gold
+        Tabla	                               Descripción
+        ----------------------------------------------------
+        gold_sales_customer_3m	            Ventas agregadas de los últimos 90 días por cliente
+        dim_features	                    Tabla final requerida, con features por cliente
+
+6. Diccionario de Datos – Tabla dim_features
+
+    Columna	Tipo	                                   Descripción
+    ----------------------------------------------------------------------------------------------------------
+    customer_id	int	                        Identificador único del cliente
+    monto_total_3m	double	                Suma del monto neto de órdenes del cliente en los últimos 3 meses
+    monto_linea_total_3m  double	        Suma del monto de líneas (line_net_amount) en últimos 3 meses
+    unidades_totales_3m	int	                Total de unidades compradas por el cliente en últimos 3 meses
+
+7. Migración a Arquitectura Productiva en Azure / Microsoft Fabric
+
+    Servicios recomendados:
+
+        Capa	                                    Servicio recomendado
+        ----------------------------------------------------------------------
+        Ingesta	                                    Fabric Data Pipelines
+        Transformación	                            Fabric Notebooks (Spark)
+        Almacenamiento	                            Lakehouse (OneLake) con Delta Lake
+        Orquestación	                            Fabric Orquestacion
+        Seguridad	                                Purview, Onelake Access Control
+        Gobierno	                                Microsoft Purview (Lineage, catálogo, políticas)
+
+    Flujo sugerido en Fabric
+
+    A. OneLake (Bronze)
+        Ingesta directa vía pipelines --> almacenamiento Delta.
+
+    B. Notebook Spark (Silver)
+        Limpieza, cast de tipos, joins, calidad de datos.
+
+    C. Notebook Spark (Gold)
+        Cálculo de features, agregados y métricas.
+
+    D. Warehouse / Lakehouse Gold
+        Consumo por BI, modelos predictivos o Power BI.
+
+    E. Purview
+        Lineage automático entre notebooks y Lakehouse.
+
+8. Tabla Final Entregada
+
+    Generada automáticamente en:
+
+        /data/gold/dim_features/
+
+        En Formato Parquet
