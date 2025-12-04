@@ -50,6 +50,8 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
             Genera tabla final dim_features
 
 3. Estructura del Repositorio
+
+   
         desafio_carozzi_docker/
         │
         ├── docker-compose.yml
@@ -70,22 +72,22 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
             ├── gold.py
             └── check_data.py
 
-4. Instalación y Ejecución
+5. Instalación y Ejecución
     Requisitos Previos:
 
         Docker Desktop instalado
 
         Git instalado
-
-    Primero Clonar el repositorio
+   
+        Primero Clonar el repositorio
         git clone https://github.com/<tu_usuario>/<repo>.git
         cd desafio_carozzi_docker
 
-    Segundo Construir y ejecutar el pipeline completo:
+        Segundo Construir y ejecutar el pipeline completo:
         docker compose up --build
 
 
-    El contenedor ejecutará automáticamente:
+        El contenedor ejecutará automáticamente:
 
         Ingesta Bronze
 
@@ -95,45 +97,45 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
         Generación de dim_features
 
-    Tercero para validar resultados
+        Tercero para validar resultados
 
         Ejecutar el script de validaciones con el siguiente comando:
 
             docker compose run --rm etl python -m src.check_data
 
-5. Resumen de Cada Capa
+7. Resumen de Cada Capa
 
-    Bronze
-        Archivo	             Origen	           Descripción
-        ----------------------------------------------------
-        customers	       CSV crudo	    Datos de clientes
-        products	       CSV crudo	    Datos de productos
-        orders_header	   CSV crudo	    Encabezado de pedidos
-        orders_detail	   CSV crudo	    Líneas de productos vendidos
+        Bronze
+            Archivo	             Origen	           Descripción
+            ----------------------------------------------------
+            customers	       CSV crudo	    Datos de clientes
+            products	       CSV crudo	    Datos de productos
+            orders_header	   CSV crudo	    Encabezado de pedidos
+            orders_detail	   CSV crudo	    Líneas de productos vendidos
+    
+        Silver
+            Tabla	                               Descripción
+            ----------------------------------------------------
+            dim_customer	                    Dimensión limpia de clientes
+            dim_product	                        Dimensión limpia de productos
+            fact_order_line	                    Hechos de órdenes con join limpio y columnas no duplicadas
+    
+        Gold
+            Tabla	                               Descripción
+            ----------------------------------------------------
+            gold_sales_customer_3m	            Ventas agregadas de los últimos 90 días por cliente
+            dim_features	                    Tabla final requerida, con features por cliente
 
-    Silver
-        Tabla	                               Descripción
-        ----------------------------------------------------
-        dim_customer	                    Dimensión limpia de clientes
-        dim_product	                        Dimensión limpia de productos
-        fact_order_line	                    Hechos de órdenes con join limpio y columnas no duplicadas
+8. Diccionario de Datos – Tabla dim_features
 
-    Gold
-        Tabla	                               Descripción
-        ----------------------------------------------------
-        gold_sales_customer_3m	            Ventas agregadas de los últimos 90 días por cliente
-        dim_features	                    Tabla final requerida, con features por cliente
+        Columna	Tipo	                                   Descripción
+        ----------------------------------------------------------------------------------------------------------
+        customer_id	int	                        Identificador único del cliente
+        monto_total_3m	double	                Suma del monto neto de órdenes del cliente en los últimos 3 meses
+        monto_linea_total_3m  double	        Suma del monto de líneas (line_net_amount) en últimos 3 meses
+        unidades_totales_3m	int	                Total de unidades compradas por el cliente en últimos 3 meses
 
-6. Diccionario de Datos – Tabla dim_features
-
-    Columna	Tipo	                                   Descripción
-    ----------------------------------------------------------------------------------------------------------
-    customer_id	int	                        Identificador único del cliente
-    monto_total_3m	double	                Suma del monto neto de órdenes del cliente en los últimos 3 meses
-    monto_linea_total_3m  double	        Suma del monto de líneas (line_net_amount) en últimos 3 meses
-    unidades_totales_3m	int	                Total de unidades compradas por el cliente en últimos 3 meses
-
-7. Migración a Arquitectura Productiva en Azure / Microsoft Fabric
+9. Migración a Arquitectura Productiva en Azure / Microsoft Fabric
 
     Servicios recomendados:
 
@@ -148,26 +150,25 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
     Flujo sugerido en Fabric
 
-    A. OneLake (Bronze)
-        Ingesta directa vía pipelines --> almacenamiento Delta.
+        A. OneLake (Bronze)
+            Ingesta directa vía pipelines --> almacenamiento Delta.
+    
+        B. Notebook Spark (Silver)
+            Limpieza, cast de tipos, joins, calidad de datos.
+    
+        C. Notebook Spark (Gold)
+            Cálculo de features, agregados y métricas.
+    
+        D. Warehouse / Lakehouse Gold
+            Consumo por BI, modelos predictivos o Power BI.
+    
+        E. Purview
+            Lineage automático entre notebooks y Lakehouse.
 
-    B. Notebook Spark (Silver)
-        Limpieza, cast de tipos, joins, calidad de datos.
-
-    C. Notebook Spark (Gold)
-        Cálculo de features, agregados y métricas.
-
-    D. Warehouse / Lakehouse Gold
-        Consumo por BI, modelos predictivos o Power BI.
-
-    E. Purview
-        Lineage automático entre notebooks y Lakehouse.
-
-8. Tabla Final Entregada
+10. Tabla Final Entregada
 
     Generada automáticamente en:
 
         /data/gold/dim_features/
-
-
         En Formato Parquet
+
