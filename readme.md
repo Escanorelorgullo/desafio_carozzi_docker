@@ -1,4 +1,4 @@
-<img width="921" height="391" alt="image" src="https://github.com/user-attachments/assets/75f56653-3111-4963-94ae-9035b4a9bfda" />Desafío Data Engineer – Arquitectura Medallion con PySpark + Docker
+Desafío Data Engineer – Arquitectura Medallion con PySpark + Docker
 
 1. Descripción del Problema y Contexto de Negocio
 
@@ -175,4 +175,5 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Parquet
+
 
