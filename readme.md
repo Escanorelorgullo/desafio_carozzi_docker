@@ -54,7 +54,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
             Genera tabla final dim_features
 
-4. Estructura del Repositorio
+3. Estructura del Repositorio
 
         desafio_carozzi_docker/
         │
@@ -76,7 +76,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
             ├── gold.py
             └── check_data.py
 
-5. Instalación y Ejecución
+4. Instalación y Ejecución
     Requisitos Previos:
 
         Docker Desktop instalado
@@ -109,9 +109,9 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
 
         docker compose run --rm etl python -m src.check_data
 
-7. Resumen de Cada Capa
+5. Resumen de Cada Capa
 
-   <img width="921" height="377" alt="image" src="https://github.com/user-attachments/assets/032c1eee-0d05-41b8-97a2-13481d5ce702" />
+  
 
 
         Bronze
@@ -135,7 +135,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
             gold_sales_customer_3m	            Ventas agregadas de los últimos 90 días por cliente
             dim_features	                    Tabla final requerida, con features por cliente
 
-9. Diccionario de Datos – Tabla dim_features
+6. Diccionario de Datos – Tabla dim_features
 
         Columna	Tipo	                                   Descripción
         ----------------------------------------------------------------------------------------------------------
@@ -144,7 +144,13 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         monto_linea_total_3m  double	        Suma del monto de líneas (line_net_amount) en últimos 3 meses
         unidades_totales_3m	int	                Total de unidades compradas por el cliente en últimos 3 meses
 
-10. Migración a Arquitectura Productiva en Azure / Microsoft Fabric
+7. Migración a Arquitectura en Microsoft Fabric
+
+<img width="921" height="377" alt="image" src="https://github.com/user-attachments/assets/032c1eee-0d05-41b8-97a2-13481d5ce702" />
+
+<img width="921" height="517" alt="image" src="https://github.com/user-attachments/assets/90b28de6-ad67-4360-8f4e-3acaa65ae2c4" />
+
+
 
     Servicios recomendados:
 
@@ -174,13 +180,14 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         E. Purview
             Lineage automático entre notebooks y Lakehouse.
 
-11. Tabla Final Entregada
+8. Tabla Final Entregada
 
         Generada automáticamente en:
 
         /data/gold/dim_features/
 
         En Formato Parquet
+
 
 
 
