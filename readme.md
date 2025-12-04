@@ -352,7 +352,7 @@ Construcción final: dim_features
     data/gold/dim_features/
 
 
-8. Migración a Arquitectura en Microsoft Fabric
+9. Migración a Arquitectura en Microsoft Fabric
 
 <img width="921" height="377" alt="image" src="https://github.com/user-attachments/assets/032c1eee-0d05-41b8-97a2-13481d5ce702" />
 
@@ -388,13 +388,14 @@ Construcción final: dim_features
         E. Purview
             Lineage entre lakehouse, pipelines, reporteria.
 
-8. Tabla Final Entregada
+10. Tabla Final Entregada
 
         Generada automáticamente en:
 
         /data/gold/dim_features/
 
-        En Formato Delta
+        En Formato Parquet
+
 
 
 
