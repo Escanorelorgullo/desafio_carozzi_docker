@@ -19,7 +19,6 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
    
 <img width="921" height="391" alt="image" src="https://github.com/user-attachments/assets/6aa69c82-7dca-4f63-9550-cc175a3f6d50" />
 
-<img width="921" height="443" alt="image" src="https://github.com/user-attachments/assets/3f102960-6879-422f-b525-0e04a52358b6" />
 
 
    La solución se compone de tres capas:
@@ -135,7 +134,10 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
             gold_sales_customer_3m	            Ventas agregadas de los últimos 90 días por cliente
             dim_features	                    Tabla final requerida, con features por cliente
 
-6. Diccionario de Datos – Tabla dim_features
+<img width="1137" height="817" alt="image" src="https://github.com/user-attachments/assets/0bf465ea-b0e9-4a5e-bde1-ad789f78dca9" />
+
+
+7. Diccionario de Datos – Tabla dim_features
 
         Columna	Tipo	                                   Descripción
         ----------------------------------------------------------------------------------------------------------
@@ -144,7 +146,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         monto_linea_total_3m  double	        Suma del monto de líneas (line_net_amount) en últimos 3 meses
         unidades_totales_3m	int	                Total de unidades compradas por el cliente en últimos 3 meses
 
-7. Migración a Arquitectura en Microsoft Fabric
+8. Migración a Arquitectura en Microsoft Fabric
 
 <img width="921" height="377" alt="image" src="https://github.com/user-attachments/assets/032c1eee-0d05-41b8-97a2-13481d5ce702" />
 
@@ -187,6 +189,7 @@ Para lograrlo, se requiere implementar una arquitectura de procesamiento por cap
         /data/gold/dim_features/
 
         En Formato Delta
+
 
 
 
