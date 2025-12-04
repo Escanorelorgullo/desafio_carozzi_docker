@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  etl:
+    build: .
+    container_name: carozzi-etl
+    # Montamos todo el proyecto local en /app dentro del contenedor
+    volumes:
+      - .:/app
+    working_dir: /app
+    # Comando por defecto (puedes cambiarlo si quieres correr otro script)
+    command: ["python", "-m", "src.main"]
